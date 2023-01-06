@@ -1,6 +1,14 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 
-function BlogForm({ addBlog }) {
+import blogService from "../services/blogs";
+
+import { createNotification } from "../reducers/notificationSlice";
+import { blogAdded } from "../reducers/blogSlice";
+
+function BlogForm({ setVisibility }) {
+  const dispatch = useDispatch();
+
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -8,13 +16,26 @@ function BlogForm({ addBlog }) {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const isSuccessful = await addBlog({ title, author, url });
+    try {
+      const blog = await blogService.create({ title, author, url });
 
-    if (isSuccessful) {
-      //reset form
-      setTitle("");
-      setAuthor("");
-      setUrl("");
+      dispatch(blogAdded(blog));
+
+      dispatch(
+        createNotification({
+          message: `A new blog - ${blog.title} by ${blog.author} was added!`,
+          type: "success",
+        })
+      );
+
+      setVisibility(false);
+    } catch (error) {
+      dispatch(
+        createNotification({
+          message: "A new blog could not be created",
+          type: "error",
+        })
+      );
     }
   }
 
@@ -29,7 +50,6 @@ function BlogForm({ addBlog }) {
             id="title"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
-            required
           />
         </label>
         <br />
@@ -40,7 +60,6 @@ function BlogForm({ addBlog }) {
             id="author"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
-            required
           />
         </label>
         <br />
@@ -52,7 +71,6 @@ function BlogForm({ addBlog }) {
             id="url"
             value={url}
             onChange={({ target }) => setUrl(target.value)}
-            required
           />
         </label>
         <br />

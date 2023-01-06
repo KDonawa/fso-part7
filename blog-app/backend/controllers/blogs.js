@@ -68,6 +68,10 @@ router.put("/:id", userExtractor, async (req, res) => {
     new: true,
     runValidators: true,
     context: "query",
+  }).populate("user", {
+    username: 1,
+    name: 1,
+    id: 1,
   });
 
   res.json(updatedBlog);

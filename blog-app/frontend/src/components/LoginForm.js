@@ -1,18 +1,34 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createNotification } from "../reducers/notificationSlice";
+import { userLogin } from "../reducers/userSlice";
+import loginService from "../services/login";
 
-function LoginForm({ loginUser }) {
+function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const dispatch = useDispatch();
+
   async function handleSubmit(event) {
     event.preventDefault();
+    try {
+      const user = await loginService.login({ username, password });
+      dispatch(userLogin(user));
 
-    const loggedIn = await loginUser({ username, password });
-
-    if (loggedIn) {
-      //reset form
-      setUsername("");
-      setPassword("");
+      dispatch(
+        createNotification({
+          message: "You have successfully logged in",
+          type: "success",
+        })
+      );
+    } catch (error) {
+      dispatch(
+        createNotification({
+          message: "Invalid username or password",
+          type: "error",
+        })
+      );
     }
   }
 

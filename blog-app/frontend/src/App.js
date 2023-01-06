@@ -1,59 +1,25 @@
-import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-
-import blogService from "./services/blogs";
-import loginService from "./services/login";
-
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import BlogList from "./components/BlogList";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 
 import { createNotification } from "./reducers/notificationSlice";
+import {
+  selectUser,
+  previousUserLogin,
+  userLogout,
+} from "./reducers/userSlice";
 
 const App = () => {
   const dispatch = useDispatch();
-  const storageKey = "blogAppUser";
-  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const blogAppUserJSON = window.localStorage.getItem(storageKey);
-    if (blogAppUserJSON) {
-      const user = JSON.parse(blogAppUserJSON);
-      setUser(user);
-      blogService.setAuth(user.token);
-    }
-  }, []);
+    dispatch(previousUserLogin());
+  }, [dispatch]);
 
-  async function loginUser(credentials) {
-    try {
-      const user = await loginService.login(credentials);
-      // save user credentials
-      setUser(user);
-      blogService.setAuth(user.token);
-      window.localStorage.setItem(storageKey, JSON.stringify(user));
-
-      dispatch(
-        createNotification({
-          message: "You have successfully logged in",
-          type: "success",
-        })
-      );
-
-      return true;
-    } catch (error) {
-      dispatch(
-        createNotification({
-          message: "Invalid username or password",
-          type: "error",
-        })
-      );
-
-      return false;
-    }
-  }
   function logoutUser() {
-    setUser(null);
-    window.localStorage.removeItem(storageKey);
+    dispatch(userLogout());
 
     dispatch(
       createNotification({
@@ -63,11 +29,13 @@ const App = () => {
     );
   }
 
+  const user = useSelector(selectUser);
+
   return (
     <div>
       <Notification />
       {user === null ? (
-        <LoginForm loginUser={loginUser} />
+        <LoginForm />
       ) : (
         <>
           <p>{user.name} logged in</p>
