@@ -1,13 +1,18 @@
 import { useState, useEffect } from "react";
-import BlogList from "./components/BlogList";
+import { useDispatch } from "react-redux";
+
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+
+import BlogList from "./components/BlogList";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 
+import { createNotification } from "./reducers/notificationSlice";
+
 const App = () => {
+  const dispatch = useDispatch();
   const storageKey = "blogAppUser";
-  const [notification, setNotification] = useState(null);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -19,11 +24,6 @@ const App = () => {
     }
   }, []);
 
-  function displayNotification(notification, timeoutSeconds = 5) {
-    setNotification(notification);
-    setTimeout(() => setNotification(null), timeoutSeconds * 1000);
-  }
-
   async function loginUser(credentials) {
     try {
       const user = await loginService.login(credentials);
@@ -32,17 +32,21 @@ const App = () => {
       blogService.setAuth(user.token);
       window.localStorage.setItem(storageKey, JSON.stringify(user));
 
-      displayNotification({
-        message: "You have successfully logged in",
-        type: "success",
-      });
+      dispatch(
+        createNotification({
+          message: "You have successfully logged in",
+          type: "success",
+        })
+      );
 
       return true;
     } catch (error) {
-      displayNotification({
-        message: "Invalid username or password",
-        type: "error",
-      });
+      dispatch(
+        createNotification({
+          message: "Invalid username or password",
+          type: "error",
+        })
+      );
 
       return false;
     }
@@ -51,15 +55,17 @@ const App = () => {
     setUser(null);
     window.localStorage.removeItem(storageKey);
 
-    displayNotification({
-      message: "You have successfully logged out",
-      type: "success",
-    });
+    dispatch(
+      createNotification({
+        message: "You have successfully logged out",
+        type: "success",
+      })
+    );
   }
 
   return (
     <div>
-      {notification && <Notification notification={notification} />}
+      <Notification />
       {user === null ? (
         <LoginForm loginUser={loginUser} />
       ) : (
@@ -69,7 +75,7 @@ const App = () => {
             Logout
           </button>
 
-          <BlogList user={user} notify={displayNotification} />
+          <BlogList user={user} />
         </>
       )}
     </div>

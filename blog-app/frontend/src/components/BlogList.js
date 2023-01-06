@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
-import blogService from "../services/blogs";
+import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
+
+import blogService from "../services/blogs";
+
 import Blog from "./Blog";
 import BlogForm from "./BlogForm";
 import Toggleable from "./Toggleable";
 
-function BlogList({ user, notify }) {
+import { createNotification } from "../reducers/notificationSlice";
+
+function BlogList({ user }) {
+  const dispatch = useDispatch();
+
   const [blogs, setBlogs] = useState([]);
   const [blogFormVisibility, setBlogFormVisibility] = useState(false);
 
@@ -18,19 +25,23 @@ function BlogList({ user, notify }) {
       const blog = await blogService.create(data);
       setBlogs(blogs.concat(blog));
 
-      notify({
-        message: `A new blog - ${blog.title} by ${blog.author} was added!`,
-        type: "success",
-      });
+      dispatch(
+        createNotification({
+          message: `A new blog - ${blog.title} by ${blog.author} was added!`,
+          type: "success",
+        })
+      );
 
       setBlogFormVisibility(false);
 
       return true;
     } catch (error) {
-      notify({
-        message: "A new blog could not be created",
-        type: "error",
-      });
+      dispatch(
+        createNotification({
+          message: "A new blog could not be created",
+          type: "error",
+        })
+      );
 
       return false;
     }
@@ -39,16 +50,22 @@ function BlogList({ user, notify }) {
     try {
       await blogService.remove(id);
       setBlogs(blogs.filter((blog) => blog.id !== id));
-      notify({
-        message: "A blog was deleted",
-        type: "success",
-      });
+
+      dispatch(
+        createNotification({
+          message: "A blog was deleted",
+          type: "success",
+        })
+      );
     } catch (error) {
       console.log(error);
-      notify({
-        message: "Blog could not be deleted",
-        type: "error",
-      });
+
+      dispatch(
+        createNotification({
+          message: "Blog could not be deleted",
+          type: "error",
+        })
+      );
     }
   }
   async function updateLikes(blog) {
