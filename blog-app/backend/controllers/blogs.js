@@ -3,6 +3,11 @@ const Blog = require("../models/blog");
 const { userExtractor } = require("../utils/middleware");
 
 router.get("/", async (req, res) => {
+  const blogs = await Blog.find({});
+  res.json(blogs);
+});
+
+router.get("/populated", async (req, res) => {
   const blogs = await Blog.find({}).populate("user", {
     username: 1,
     name: 1,

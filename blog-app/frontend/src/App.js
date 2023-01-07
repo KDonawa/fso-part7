@@ -1,53 +1,40 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import BlogList from "./components/BlogList";
-import LoginForm from "./components/LoginForm";
-import Notification from "./components/Notification";
+import { useDispatch } from "react-redux";
+import { previousUserLogin } from "./reducers/userSlice";
 
-import { createNotification } from "./reducers/notificationSlice";
-import {
-  selectUser,
-  previousUserLogin,
-  userLogout,
-} from "./reducers/userSlice";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./pages/Home";
+import Root from "./pages/Root";
+import Users from "./pages/Users";
+import User, { loader as userLoader } from "./pages/User";
+import Blog from "./pages/Blog";
+import { initializeBlogs } from "./reducers/blogSlice";
 
-const App = () => {
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: "users", element: <Users /> },
+      { path: "users/:id", element: <User />, loader: userLoader },
+      { path: "blogs/:id", element: <Blog /> },
+    ],
+  },
+]);
+
+function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(previousUserLogin());
   }, [dispatch]);
 
-  function logoutUser() {
-    dispatch(userLogout());
+  useEffect(() => {
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
-    dispatch(
-      createNotification({
-        message: "You have successfully logged out",
-        type: "success",
-      })
-    );
-  }
-
-  const user = useSelector(selectUser);
-
-  return (
-    <div>
-      <Notification />
-      {user === null ? (
-        <LoginForm />
-      ) : (
-        <>
-          <p>{user.name} logged in</p>
-          <button className="logout-btn" onClick={logoutUser}>
-            Logout
-          </button>
-
-          <BlogList user={user} />
-        </>
-      )}
-    </div>
-  );
-};
+  return <RouterProvider router={router} />;
+}
 
 export default App;

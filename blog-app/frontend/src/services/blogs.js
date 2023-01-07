@@ -12,6 +12,16 @@ async function getAll() {
   return response.data;
 }
 
+async function getAllPopulated() {
+  const response = await axios.get(`${baseUrl}/populated`);
+  return response.data;
+}
+
+async function getById(id) {
+  const response = await axios.get(`${baseUrl}/${id}`);
+  return response.data;
+}
+
 async function create(data) {
   const config = { headers: auth };
   const response = await axios.post(baseUrl, data, config);
@@ -29,5 +39,13 @@ async function remove(id) {
   await axios.delete(`${baseUrl}/${id}`, config);
 }
 
-const blogService = { setAuth, getAll, create, update, remove };
+const blogService = {
+  setAuth,
+  getAll,
+  getAllPopulated,
+  getById,
+  create,
+  update,
+  remove,
+};
 export default blogService;

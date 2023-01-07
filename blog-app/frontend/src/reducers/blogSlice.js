@@ -28,8 +28,12 @@ export const { setBlogs, blogAdded, blogDeleted, blogUpdated } =
 
 export const selectBlogs = (state) => state.blogs;
 
+export const selectBlogById = (id) => (state) => {
+  return state.blogs.find((blog) => blog.id === id);
+};
+
 export const initializeBlogs = () => async (dispatch) => {
-  const blogs = await blogService.getAll();
+  const blogs = await blogService.getAllPopulated();
   dispatch(setBlogs(blogs));
 };
 
