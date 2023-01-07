@@ -22,7 +22,7 @@ describe("Blog app", function () {
   });
 
   it("login form is shown on home page", function () {
-    cy.contains("Log in to application");
+    cy.contains("Log in");
     cy.contains("Login");
   });
 
@@ -32,7 +32,7 @@ describe("Blog app", function () {
       cy.get("#password").type(user.password);
       cy.get(".login-btn").click();
 
-      cy.contains(`${user.name} logged in`);
+      cy.contains("You have successfully logged in");
     });
 
     it("fails with wrong credentials", function () {
@@ -40,10 +40,7 @@ describe("Blog app", function () {
       cy.get("#password").type("wrong");
       cy.get(".login-btn").click();
 
-      cy.get(".error")
-        .should("contain", "Invalid username or password")
-        .and("have.css", "color", "rgb(255, 0, 0)")
-        .and("have.css", "border-style", "solid");
+      cy.contains("Invalid username or password");
     });
   });
 
@@ -59,7 +56,7 @@ describe("Blog app", function () {
       cy.get("#url").type(newBlog.url);
       cy.get(".blog-form__submit-btn").click();
 
-      cy.contains(`${newBlog.title} - ${newBlog.author}`);
+      cy.get(".blog-card").should("contain", `${newBlog.title}`);
     });
 
     describe("and a blog exists", function () {
@@ -69,9 +66,9 @@ describe("Blog app", function () {
 
       it("it can be liked", function () {
         cy.get(".blog__info").click();
-        cy.get(".blog__likes").should("contain", "0 likes");
+        cy.get(".blog__like-btn").should("contain", "Likes: 0");
         cy.get(".blog__like-btn").click();
-        cy.get(".blog__likes").should("contain", "1 like");
+        cy.get(".blog__like-btn").should("contain", "Likes: 1");
       });
 
       it("it can be deleted by user who created it", function () {
@@ -106,19 +103,19 @@ describe("Blog app", function () {
       });
 
       it("blogs are ordered according to likes with the blog with the most likes being first", function () {
-        cy.get(".blog")
+        cy.get(".blog-card")
           .eq(0)
           .should("contain", "Blog with with the least likes");
-        cy.get(".blog")
+        cy.get(".blog-card")
           .eq(1)
           .should("contain", "Blog with with the most likes");
-        cy.get(".blog__info").eq(1).click();
+        cy.get(".blog-card").eq(1).click();
         cy.get(".blog__like-btn").click();
         cy.go("back");
-        cy.get(".blog__info")
+        cy.get(".blog-card")
           .eq(0)
           .should("contain", "Blog with with the most likes");
-        cy.get(".blog__info")
+        cy.get(".blog-card")
           .eq(1)
           .should("contain", "Blog with with the least likes");
       });

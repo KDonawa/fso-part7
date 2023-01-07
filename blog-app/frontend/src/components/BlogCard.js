@@ -4,7 +4,7 @@ import Card from "react-bootstrap/Card";
 function BlogCard({ blog }) {
   return (
     <LinkContainer to={`/blogs/${blog.id}`} style={{ cursor: "pointer" }}>
-      <Card className="blog">
+      <Card className="blog-card">
         <Card.Body className="blog__info">
           <blockquote className="blockquote mb-0">
             <p>{blog.title}</p>

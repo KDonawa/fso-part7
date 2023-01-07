@@ -43,6 +43,7 @@ function BlogForm({ hide }) {
         <Form.Group className="mb-3">
           <Form.Label>Title</Form.Label>
           <Form.Control
+            id="title"
             type="text"
             placeholder="Enter title"
             value={title}
@@ -53,6 +54,7 @@ function BlogForm({ hide }) {
         <Form.Group className="mb-3">
           <Form.Label>Author</Form.Label>
           <Form.Control
+            id="author"
             type="text"
             placeholder="Enter author"
             value={author}
@@ -63,6 +65,7 @@ function BlogForm({ hide }) {
         <Form.Group className="mb-3">
           <Form.Label>Url</Form.Label>
           <Form.Control
+            id="url"
             type="text"
             placeholder="http://url.com"
             value={url}
