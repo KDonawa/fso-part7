@@ -4,6 +4,7 @@ import LoginForm from "../components/LoginForm";
 import { useSelector } from "react-redux";
 import { selectUser } from "../reducers/userSlice";
 import Navigation from "../components/Navigation";
+import Container from "react-bootstrap/Container";
 
 function Root() {
   const user = useSelector(selectUser);
@@ -12,11 +13,10 @@ function Root() {
     <div>
       <Navigation user={user} />
 
-      <h1>Blog App</h1>
-
-      <Notification />
-
-      {user === null ? <LoginForm /> : <Outlet />}
+      <Container className="my-4">
+        <Notification />
+        {user === null ? <LoginForm /> : <Outlet />}
+      </Container>
     </div>
   );
 }

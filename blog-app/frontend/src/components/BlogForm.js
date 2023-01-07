@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-
 import blogService from "../services/blogs";
-
 import { blogAdded } from "../reducers/blogSlice";
 import { useNotification } from "../hooks";
+import Button from "./Button";
+import Form from "react-bootstrap/Form";
 
-function BlogForm({ setVisibility }) {
+function BlogForm({ hide }) {
   const dispatch = useDispatch();
   const notify = useNotification();
 
@@ -27,7 +27,7 @@ function BlogForm({ setVisibility }) {
         type: "success",
       });
 
-      setVisibility(false);
+      hide();
     } catch (error) {
       notify({
         message: "A new blog could not be created",
@@ -38,43 +38,54 @@ function BlogForm({ setVisibility }) {
 
   return (
     <>
-      <h2>Create new blog post</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="title">
-          Title:
-          <input
+      <h3>Add new blog post</h3>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Label>Title</Form.Label>
+          <Form.Control
             type="text"
-            id="title"
+            placeholder="Enter title"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
           />
-        </label>
-        <br />
-        <label htmlFor="author">
-          Author:
-          <input
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label>Author</Form.Label>
+          <Form.Control
             type="text"
-            id="author"
+            placeholder="Enter author"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
           />
-        </label>
-        <br />
-        <label htmlFor="url">
-          Url:
-          <input
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label>Url</Form.Label>
+          <Form.Control
             type="text"
-            name="url"
-            id="url"
+            placeholder="http://url.com"
             value={url}
             onChange={({ target }) => setUrl(target.value)}
           />
-        </label>
-        <br />
-        <button className="blog-form__submit-btn" type="submit">
+        </Form.Group>
+
+        <Button
+          variant="primary"
+          className="blog-form__submit-btn mx-1"
+          type="submit"
+        >
           Submit
-        </button>
-      </form>
+        </Button>
+        <Button
+          variant="outline-danger"
+          className="blog-form__cancel-btn"
+          type="button"
+          onClick={hide}
+        >
+          Cancel
+        </Button>
+      </Form>
     </>
   );
 }

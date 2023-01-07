@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { useNotification } from "../hooks";
 import { userLogin } from "../reducers/userSlice";
 import loginService from "../services/login";
+import Button from "./Button";
+import Form from "react-bootstrap/Form";
 
 function LoginForm() {
   const [username, setUsername] = useState("");
@@ -31,36 +33,36 @@ function LoginForm() {
 
   return (
     <>
-      <h2>Log in to application</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">
-          Username:
-          <input
+      <h3>Log in</h3>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Label>Username</Form.Label>
+          <Form.Control
             type="text"
-            name="username"
-            id="username"
+            placeholder="Enter username"
             value={username}
             onChange={({ target }) => setUsername(target.value)}
-            required
           />
-        </label>
-        <br></br>
-        <label htmlFor="password">
-          Password:
-          <input
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
             type="password"
-            name="password"
-            id="password"
+            placeholder="Password"
             value={password}
             onChange={({ target }) => setPassword(target.value)}
-            required
           />
-        </label>
-        <br></br>
-        <button className="login-btn" type="submit">
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicCheckbox">
+          <Form.Check type="checkbox" label="Subscribe to newsletter!" />
+        </Form.Group>
+
+        <Button className="login-btn" type="submit">
           Login
-        </button>
-      </form>
+        </Button>
+      </Form>
     </>
   );
 }

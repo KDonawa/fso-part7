@@ -3,7 +3,8 @@ import { useSelector } from "react-redux";
 import BlogForm from "./BlogForm";
 import Toggleable from "./Toggleable";
 import { selectBlogs } from "../reducers/blogSlice";
-import { Link } from "react-router-dom";
+import Stack from "react-bootstrap/Stack";
+import BlogCard from "./BlogCard";
 
 function BlogList() {
   const [blogFormVisibility, setBlogFormVisibility] = useState(false);
@@ -13,30 +14,22 @@ function BlogList() {
 
   return (
     <>
-      {sortedBlogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      <h2>Blogs</h2>
 
-      <Toggleable
-        isVisible={blogFormVisibility}
-        toggleVisibility={setBlogFormVisibility}
-        buttonLabel={{ visible: "Cancel", hidden: "New blog" }}
-      >
-        <BlogForm setVisibility={setBlogFormVisibility} />
-      </Toggleable>
+      <Stack gap={3}>
+        {sortedBlogs.map((blog) => (
+          <BlogCard key={blog.id} blog={blog} />
+        ))}
+
+        <Toggleable
+          isVisible={blogFormVisibility}
+          show={() => setBlogFormVisibility(true)}
+          buttonLabel="New blog"
+        >
+          <BlogForm hide={() => setBlogFormVisibility(false)} />
+        </Toggleable>
+      </Stack>
     </>
-  );
-}
-
-function Blog({ blog }) {
-  return (
-    <div className="blog">
-      <Link to={`/blogs/${blog.id}`}>
-        <span className="blog__info">
-          {blog.title} - {blog.author}
-        </span>
-      </Link>
-    </div>
   );
 }
 

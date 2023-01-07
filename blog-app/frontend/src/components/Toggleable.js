@@ -1,13 +1,12 @@
-function Toggleable({ isVisible, toggleVisibility, buttonLabel, children }) {
+import Button from "./Button";
+
+function Toggleable({ isVisible, show, buttonLabel, children }) {
   return (
     <div>
       {isVisible ? (
-        <>
-          {children}
-          <button onClick={() => toggleVisibility(false)}>{buttonLabel.visible}</button>
-        </>
+        children
       ) : (
-        <button onClick={() => toggleVisibility(true)}>{buttonLabel.hidden}</button>
+        <Button onClick={() => show()}>{buttonLabel}</Button>
       )}
     </div>
   );

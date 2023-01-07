@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import userService from "../services/users";
-import { Link } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
+import Card from "react-bootstrap/Card";
+import Stack from "react-bootstrap/Stack";
 
 function Users() {
   const [users, setUsers] = useState([]);
@@ -17,26 +19,27 @@ function Users() {
   return users.length === 0 ? null : (
     <div>
       <h2>Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Blogs Created</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => {
-            return (
-              <tr key={user.id}>
-                <td>
-                  <Link to={user.id}>{user.name}</Link>
-                </td>
-                <td>{user.blogs.length}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+
+      <Stack gap={3}>
+        {users.map((user) => {
+          return (
+            <LinkContainer
+              key={user.id}
+              to={user.id}
+              style={{ cursor: "pointer" }}
+            >
+              <Card>
+                <Card.Body>
+                  <blockquote className="blockquote mb-0">
+                    <p> {user.name}</p>
+                    <footer className="blockquote-footer">{`Blogs created : ${user.blogs.length}`}</footer>
+                  </blockquote>
+                </Card.Body>
+              </Card>
+            </LinkContainer>
+          );
+        })}
+      </Stack>
     </div>
   );
 }

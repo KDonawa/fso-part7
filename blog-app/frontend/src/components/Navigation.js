@@ -1,7 +1,11 @@
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
 import { useNotification } from "../hooks";
 import { userLogout } from "../reducers/userSlice";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import Container from "react-bootstrap/Container";
+import Button from "./Button";
+import { LinkContainer } from "react-router-bootstrap";
 
 function Navigation({ user }) {
   const dispatch = useDispatch();
@@ -16,19 +20,32 @@ function Navigation({ user }) {
     });
   }
   return (
-    <nav style={{ backgroundColor: "lightgrey" }}>
-      <div>
-        <Link to="/">Blogs</Link> <Link to="/users">Users</Link>{" "}
+    <Navbar bg="light" variant="light">
+      <Container>
+        <Navbar.Brand>Blog App</Navbar.Brand>
+        <Nav className="me-auto">
+          <LinkContainer to="/">
+            <Nav.Link>Home</Nav.Link>
+          </LinkContainer>
+
+          <LinkContainer to="/users">
+            <Nav.Link>Users</Nav.Link>
+          </LinkContainer>
+        </Nav>
+
         {user && (
           <>
-            <span>{user.name} logged in</span>{" "}
-            <button className="logout-btn" onClick={logoutUser}>
-              Logout
-            </button>
+            <Navbar.Collapse className="justify-content-end">
+              <Navbar.Text>Signed in as: {user.name}</Navbar.Text>
+
+              <Button className="logout-btn mx-2" onClick={logoutUser}>
+                Logout
+              </Button>
+            </Navbar.Collapse>
           </>
         )}
-      </div>
-    </nav>
+      </Container>
+    </Navbar>
   );
 }
 

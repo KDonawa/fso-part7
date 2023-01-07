@@ -5,6 +5,8 @@ import blogService from "../services/blogs";
 import { useDispatch, useSelector } from "react-redux";
 import { blogDeleted, blogUpdated } from "../reducers/blogSlice";
 import { selectUserId } from "../reducers/userSlice";
+import Button from "./Button";
+import Card from "react-bootstrap/Card";
 
 function Blog({ blog }) {
   const notify = useNotification();
@@ -46,24 +48,37 @@ function Blog({ blog }) {
 
   return (
     <div>
-      <h2>{blog.title}</h2>
-      <a href={`${blog.url}`}>{blog.url}</a>
-      <p>
-        <span className="blog__likes">{`${blog.likes} ${
-          blog.likes === 1 ? "like" : "likes"
-        }`}</span>{" "}
-        <button className="blog__like-btn" onClick={updateLikes}>
-          like
-        </button>
-      </p>
-      <p>
-        Added by <Link to={`/users/${blog.user.id}`}>{blog.user.name}</Link>
-      </p>
-      {blog.user.id === userId && (
-        <button className="blog__delete-btn" onClick={deleteBlog}>
-          Delete
-        </button>
-      )}
+      <Card>
+        <Card.Body>
+          <Card.Title>{blog.title}</Card.Title>
+          <p>
+            <a href={`${blog.url}`}>{blog.url}</a>
+          </p>
+          <p>
+            Added by <Link to={`/users/${blog.user.id}`}>{blog.user.name}</Link>
+          </p>
+          <p>
+            <Button
+              variant="primary"
+              size="sm"
+              className="blog__like-btn"
+              onClick={updateLikes}
+            >
+              Likes: {blog.likes}
+            </Button>
+          </p>
+          {blog.user.id === userId && (
+            <Button
+              variant="outline-danger"
+              size="sm"
+              className="blog__delete-btn my-1"
+              onClick={deleteBlog}
+            >
+              Delete
+            </Button>
+          )}
+        </Card.Body>
+      </Card>
     </div>
   );
 }
