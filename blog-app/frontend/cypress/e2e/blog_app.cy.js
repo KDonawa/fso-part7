@@ -21,7 +21,7 @@ describe("Blog app", function () {
     cy.visit("http://localhost:3000");
   });
 
-  it("Login form is shown", function () {
+  it("login form is shown on home page", function () {
     cy.contains("Log in to application");
     cy.contains("Login");
   });
@@ -59,7 +59,7 @@ describe("Blog app", function () {
       cy.get("#url").type(newBlog.url);
       cy.get(".blog-form__submit-btn").click();
 
-      cy.contains(`${newBlog.title} ${newBlog.author}`);
+      cy.contains(`${newBlog.title} - ${newBlog.author}`);
     });
 
     describe("and a blog exists", function () {
@@ -68,28 +68,26 @@ describe("Blog app", function () {
       });
 
       it("it can be liked", function () {
-        cy.contains("view").click();
-        cy.get(".blog__likes").should("contain", "likes: 0");
+        cy.get(".blog__info").click();
+        cy.get(".blog__likes").should("contain", "0 likes");
         cy.get(".blog__like-btn").click();
-        cy.get(".blog__likes").should("contain", "likes: 1");
+        cy.get(".blog__likes").should("contain", "1 like");
       });
 
       it("it can be deleted by user who created it", function () {
-        cy.contains("view").click();
+        cy.get(".blog__info").click();
+        cy.get("html").should("contain", `${newBlog.title}`);
         cy.get(".blog__delete-btn").click();
         cy.get("html").should("contain", "A blog was deleted");
-        cy.get("html").should(
-          "not.contain",
-          `${newBlog.title} ${newBlog.author}`
-        );
+        cy.get("html").should("not.contain", `${newBlog.title}`);
       });
 
       it("it cannot be deleted by user did not create it", function () {
         cy.get(".logout-btn").click();
         cy.request("POST", "http://localhost:3003/api/users", user2);
         cy.login(user2);
-        cy.contains("view").click();
-        cy.get("html").should("not.contain", "delete");
+        cy.get(".blog__info").click();
+        cy.get("html").should("not.contain", "Delete");
       });
     });
 
@@ -114,14 +112,13 @@ describe("Blog app", function () {
         cy.get(".blog")
           .eq(1)
           .should("contain", "Blog with with the most likes");
-
-        cy.get(".blog").eq(1).contains("view").click();
+        cy.get(".blog__info").eq(1).click();
         cy.get(".blog__like-btn").click();
-
-        cy.get(".blog")
+        cy.go("back");
+        cy.get(".blog__info")
           .eq(0)
           .should("contain", "Blog with with the most likes");
-        cy.get(".blog")
+        cy.get(".blog__info")
           .eq(1)
           .should("contain", "Blog with with the least likes");
       });

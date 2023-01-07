@@ -58,12 +58,21 @@ function Blog() {
       <h2>{blog.title}</h2>
       <a href={`${blog.url}`}>{blog.url}</a>
       <p>
-        {blog.likes} likes <button onClick={updateLikes}>like</button>
+        <span className="blog__likes">{`${blog.likes} ${
+          blog.likes === 1 ? "like" : "likes"
+        }`}</span>{" "}
+        <button className="blog__like-btn" onClick={updateLikes}>
+          like
+        </button>
       </p>
       <p>
         Added by <Link to={`/users/${blog.user.id}`}>{blog.user.name}</Link>
       </p>
-      {blog.user.id === userId && <button onClick={deleteBlog}>Delete</button>}
+      {blog.user.id === userId && (
+        <button className="blog__delete-btn" onClick={deleteBlog}>
+          Delete
+        </button>
+      )}
     </div>
   );
 }

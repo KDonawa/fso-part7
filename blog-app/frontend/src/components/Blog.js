@@ -6,7 +6,9 @@ function Blog({ blog }) {
   return (
     <div className="blog">
       <Link to={`/blogs/${blog.id}`}>
-        {blog.title} - {blog.author}
+        <span className="blog__info">
+          {blog.title} - {blog.author}
+        </span>
       </Link>
     </div>
   );
