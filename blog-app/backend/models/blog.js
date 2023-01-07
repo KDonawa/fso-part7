@@ -6,6 +6,7 @@ const blogSchema = new Schema({
   author: String,
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
   likes: { type: Number, default: 0 },
+  comments: [String],
 });
 
 blogSchema.set("toJSON", {

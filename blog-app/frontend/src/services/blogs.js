@@ -39,6 +39,11 @@ async function remove(id) {
   await axios.delete(`${baseUrl}/${id}`, config);
 }
 
+async function postComment(comment, id) {
+  const response = await axios.post(`${baseUrl}/${id}/comments`, comment);
+  return response.data;
+}
+
 const blogService = {
   setAuth,
   getAll,
@@ -47,5 +52,6 @@ const blogService = {
   create,
   update,
   remove,
+  postComment,
 };
 export default blogService;

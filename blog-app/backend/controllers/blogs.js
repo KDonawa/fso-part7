@@ -46,6 +46,20 @@ router.post("/", userExtractor, async (req, res) => {
   res.status(201).json(blog);
 });
 
+router.post("/:id/comments", async (req, res) => {
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    req.params.id,
+    { $push: { comments: req.body.comment } },
+    { new: true, runValidators: true }
+  ).populate("user", {
+    username: 1,
+    name: 1,
+    id: 1,
+  });
+
+  res.json(updatedBlog);
+});
+
 router.delete("/:id", userExtractor, async (req, res) => {
   const blogToDelete = await Blog.findById(req.params.id);
   if (!blogToDelete) {
