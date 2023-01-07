@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import Blog from "./Blog";
 import BlogForm from "./BlogForm";
 import Toggleable from "./Toggleable";
 import { selectBlogs } from "../reducers/blogSlice";
+import { Link } from "react-router-dom";
 
 function BlogList() {
   const [blogFormVisibility, setBlogFormVisibility] = useState(false);
@@ -25,6 +25,18 @@ function BlogList() {
         <BlogForm setVisibility={setBlogFormVisibility} />
       </Toggleable>
     </>
+  );
+}
+
+function Blog({ blog }) {
+  return (
+    <div className="blog">
+      <Link to={`/blogs/${blog.id}`}>
+        <span className="blog__info">
+          {blog.title} - {blog.author}
+        </span>
+      </Link>
+    </div>
   );
 }
 

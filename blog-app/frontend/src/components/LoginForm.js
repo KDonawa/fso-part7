@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createNotification } from "../reducers/notificationSlice";
+import { useNotification } from "../hooks";
 import { userLogin } from "../reducers/userSlice";
 import loginService from "../services/login";
 
 function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const notify = useNotification();
 
   const dispatch = useDispatch();
 
@@ -16,19 +17,15 @@ function LoginForm() {
       const user = await loginService.login({ username, password });
       dispatch(userLogin(user));
 
-      dispatch(
-        createNotification({
-          message: "You have successfully logged in",
-          type: "success",
-        })
-      );
+      notify({
+        message: "You have successfully logged in",
+        type: "success",
+      });
     } catch (error) {
-      dispatch(
-        createNotification({
-          message: "Invalid username or password",
-          type: "error",
-        })
-      );
+      notify({
+        message: "Invalid username or password",
+        type: "error",
+      });
     }
   }
 

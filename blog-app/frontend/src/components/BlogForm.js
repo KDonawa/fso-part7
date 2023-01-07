@@ -3,11 +3,12 @@ import { useDispatch } from "react-redux";
 
 import blogService from "../services/blogs";
 
-import { createNotification } from "../reducers/notificationSlice";
 import { blogAdded } from "../reducers/blogSlice";
+import { useNotification } from "../hooks";
 
 function BlogForm({ setVisibility }) {
   const dispatch = useDispatch();
+  const notify = useNotification();
 
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -21,21 +22,17 @@ function BlogForm({ setVisibility }) {
 
       dispatch(blogAdded(blog));
 
-      dispatch(
-        createNotification({
-          message: `A new blog - ${blog.title} by ${blog.author} was added!`,
-          type: "success",
-        })
-      );
+      notify({
+        message: `A new blog - ${blog.title} by ${blog.author} was added!`,
+        type: "success",
+      });
 
       setVisibility(false);
     } catch (error) {
-      dispatch(
-        createNotification({
-          message: "A new blog could not be created",
-          type: "error",
-        })
-      );
+      notify({
+        message: "A new blog could not be created",
+        type: "error",
+      });
     }
   }
 

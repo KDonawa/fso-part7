@@ -1,20 +1,19 @@
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { createNotification } from "../reducers/notificationSlice";
+import { useNotification } from "../hooks";
 import { userLogout } from "../reducers/userSlice";
 
 function Navigation({ user }) {
   const dispatch = useDispatch();
+  const notify = useNotification();
 
   function logoutUser() {
     dispatch(userLogout());
 
-    dispatch(
-      createNotification({
-        message: "You have successfully logged out",
-        type: "success",
-      })
-    );
+    notify({
+      message: "You have successfully logged out",
+      type: "success",
+    });
   }
   return (
     <nav style={{ backgroundColor: "lightgrey" }}>
